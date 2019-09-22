@@ -10,6 +10,10 @@ import com.gotenna.mapboxdemo.Debug.Loggers;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
 import com.mapbox.mapboxsdk.location.modes.CameraMode;
@@ -22,12 +26,15 @@ import com.mapbox.mapboxsdk.maps.Style;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PermissionsListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PermissionsListener,MapboxMap.OnMapClickListener {
 
 
     private PermissionsManager permissionsManager;
     private MapboxMap mapboxMap;
     private MapView mapView;
+
+    private static final LatLng locationOne = new LatLng(36.532128, -93.489121);
+    private static final LatLng locationTwo = new LatLng(25.837058, -106.646234);
 
 
 
@@ -63,13 +70,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
+
             case R.id.menu_all:
-                Loggers.show("Options","","MEnu All");
+
                 Toast.makeText(this,"Current User",Toast.LENGTH_SHORT).show();
+                showAllUSers();
+                setCameraBounds();
+
+
                 return true;
 
             case R.id.menu_current:
-                Loggers.show("Options","","All Users");
+                
                 Toast.makeText(this,"All Users",Toast.LENGTH_SHORT).show();
                 return true;
 
@@ -92,19 +104,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
 
 
+
+        mapboxMap.addOnMapClickListener(MainActivity.this);
     }
 
 
-    private void enableLocation(){
-        if(PermissionsManager.areLocationPermissionsGranted(this)){
-            Loggers.show(this.getLocalClassName(),"EnableLocation","");
-        }
-        else{
-            permissionsManager = new PermissionsManager(this);
-            permissionsManager.requestLocationPermissions(this);
 
-        }
+    private void showAllUSers(){
+
+        mapboxMap.addMarker(new MarkerOptions()
+                .position(locationOne)
+                .title("Loc 1"));
+        mapboxMap.addMarker(new MarkerOptions()
+                .position(locationTwo)
+                .title("Loc 2"));
     }
+
+
+    private void setCameraBounds(){
+
+        Toast.makeText(this, "OnMapClick", Toast.LENGTH_LONG).show();
+
+        LatLngBounds latLngBounds = new LatLngBounds.Builder()
+                .include(locationOne) // Northeast
+                .include(locationTwo) // Southwest
+                .build();
+
+        mapboxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50), 5000);
+    }
+
+
+
 
 
 
@@ -204,7 +234,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
+    @Override
+    public boolean onMapClick(@NonNull LatLng point) {
 
-
-
+        return true;
+    }
 }
