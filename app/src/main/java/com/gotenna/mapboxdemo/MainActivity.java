@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private PermissionsManager permissionsManager;
     private MapboxMap mapboxMap;
     private MapView mapView;
+    private LocationComponent locationComponent;
 
     private static final LatLng locationOne = new LatLng(36.532128, -93.489121);
     private static final LatLng locationTwo = new LatLng(25.837058, -106.646234);
@@ -75,13 +76,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 Toast.makeText(this,"Current User",Toast.LENGTH_SHORT).show();
                 showAllUSers();
-                setCameraBounds();
+                setCameraBounds(locationOne,locationTwo);
 
 
                 return true;
 
             case R.id.menu_current:
-                
+                clearAllMarkers();
+                locationComponent.setCameraMode(CameraMode.TRACKING);
                 Toast.makeText(this,"All Users",Toast.LENGTH_SHORT).show();
                 return true;
 
@@ -120,14 +122,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .title("Loc 2"));
     }
 
+    private void clearAllMarkers(){
 
-    private void setCameraBounds(){
+        mapboxMap.clear();
+
+    }
+
+
+    private void setCameraBounds(LatLng l1, LatLng l2){
 
         Toast.makeText(this, "OnMapClick", Toast.LENGTH_LONG).show();
 
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
-                .include(locationOne) // Northeast
-                .include(locationTwo) // Southwest
+                .include(l1) // Northeast
+                .include(l2) // Southwest
                 .build();
 
         mapboxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50), 5000);
@@ -141,23 +149,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @SuppressWarnings( {"MissingPermission"})
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
-// Check if permissions are enabled and if not request
+            // Check if permissions are enabled and if not request
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
 
-// Get an instance of the component
-            LocationComponent locationComponent = mapboxMap.getLocationComponent();
+            // Get an instance of the component
+            locationComponent = mapboxMap.getLocationComponent();
 
-// Activate with options
+            // Activate with options
             locationComponent.activateLocationComponent(
                     LocationComponentActivationOptions.builder(this, loadedMapStyle).build());
 
-// Enable to make component visible
+            // Enable to make component visible
             locationComponent.setLocationComponentEnabled(true);
 
-// Set the component's camera mode
+            // Set the component's camera mode
             locationComponent.setCameraMode(CameraMode.TRACKING);
 
-// Set the component's render mode
+            // Set the component's render mode
             locationComponent.setRenderMode(RenderMode.COMPASS);
         } else {
             permissionsManager = new PermissionsManager(this);
