@@ -50,6 +50,7 @@ public class UserRepository {
 
         @Override
         protected Void doInBackground(Users... users) {
+            Loggers.show(TAG,"InsertuserAsyncTask","-->");
             usersDao.insert(users[0]);
             return null;
         }

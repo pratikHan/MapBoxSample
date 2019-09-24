@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         userViewModel.getAllUsersData().observe(this, new Observer<List<Users>>() {
             @Override
             public void onChanged(List<Users> users) {
+                showToast("Users");
 
             }
         });

@@ -22,6 +22,8 @@ public abstract class UserDatabase extends RoomDatabase {
 
     public static synchronized UserDatabase getInstance(Context context){
 
+
+
         if (instance == null){
             instance = Room.databaseBuilder(context,
                     UserDatabase.class, "user_database.db")
@@ -29,7 +31,7 @@ public abstract class UserDatabase extends RoomDatabase {
                     .addCallback(roomCallback)
                     .build();
         }
-
+        Loggers.show(TAG,"Constructor","-->");
 
         return  instance;
     }
@@ -41,12 +43,12 @@ public abstract class UserDatabase extends RoomDatabase {
             super.onCreate(db);
             Loggers.show(TAG, "Callback","Oncreate");
 
-
+            new PopulateDb(instance).execute();
         }
     };
 
 
-    private static class PopulateDb extends  AsyncTask<Users,Void,Void>{
+    private static class PopulateDb extends  AsyncTask<Void,Void,Void>{
 
         private UsersDao usersDao;
         private PopulateDb(UserDatabase userDatabase){
@@ -54,7 +56,7 @@ public abstract class UserDatabase extends RoomDatabase {
         }
 
         @Override
-        protected Void doInBackground(Users... users) {
+        protected Void doInBackground(Void... voids) {
 
             Loggers.show(TAG, "PopulateDb", "-->");
             usersDao.insert(new Users("A",12.5,12.5,"D1"));
