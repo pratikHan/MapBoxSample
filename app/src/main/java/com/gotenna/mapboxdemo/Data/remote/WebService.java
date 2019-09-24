@@ -7,7 +7,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
-public interface Service {
+public interface WebService {
 
     @GET("/development/scripts/get_map_pins.php")
     Call<List<Users>> getAllUsersByLatitude();
