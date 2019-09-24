@@ -1,6 +1,7 @@
 package com.gotenna.mapboxdemo.Data.local;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -43,5 +44,26 @@ public abstract class UserDatabase extends RoomDatabase {
 
         }
     };
+
+
+    private static class PopulateDb extends  AsyncTask<Users,Void,Void>{
+
+        private UsersDao usersDao;
+        private PopulateDb(UserDatabase userDatabase){
+            usersDao = userDatabase.usersDao();
+        }
+
+        @Override
+        protected Void doInBackground(Users... users) {
+
+            Loggers.show(TAG, "PopulateDb", "-->");
+            usersDao.insert(new Users("A",12.5,12.5,"D1"));
+            usersDao.insert(new Users("B",10.2,19.3,"D2"));
+            usersDao.insert(new Users("C",15.22,2.3,"D3"));
+
+
+            return null;
+        }
+    }
 
 }

@@ -1,12 +1,18 @@
 package com.gotenna.mapboxdemo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.gotenna.mapboxdemo.Data.local.Users;
 import com.gotenna.mapboxdemo.Debug.Loggers;
+import com.gotenna.mapboxdemo.ViewModel.UserViewModel;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -34,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private MapView mapView;
     private LocationComponent locationComponent;
 
+    UserViewModel userViewModel;
+
     private static final LatLng locationOne = new LatLng(36.532128, -93.489121);
     private static final LatLng locationTwo = new LatLng(25.837058, -106.646234);
 
@@ -46,6 +54,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Loggers.show(this.getLocalClassName(),"Oncreate","_>");
 
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        userViewModel.getAllUsersData().observe(this, new Observer<List<Users>>() {
+            @Override
+            public void onChanged(List<Users> users) {
+
+            }
+        });
+
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activity_main);
 
@@ -53,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-
 
 
 
@@ -246,5 +261,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onMapClick(@NonNull LatLng point) {
 
         return true;
+    }
+
+
+    public void showToast (String msg){
+
+        Toast.makeText(this,msg,Toast.LENGTH_LONG).show();
     }
 }

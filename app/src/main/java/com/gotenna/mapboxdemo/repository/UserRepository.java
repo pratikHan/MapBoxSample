@@ -2,6 +2,7 @@ package com.gotenna.mapboxdemo.repository;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 
@@ -11,6 +12,7 @@ import com.gotenna.mapboxdemo.Data.local.UsersDao;
 import com.gotenna.mapboxdemo.Data.remote.ApiUtils;
 import com.gotenna.mapboxdemo.Data.remote.WebService;
 import com.gotenna.mapboxdemo.Debug.Loggers;
+import com.gotenna.mapboxdemo.MainActivity;
 
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class UserRepository {
     private UsersDao usersDao;
     LiveData<List<Users>> allusers;
 
+
     WebService webService;
 
     public UserRepository (Application application){
@@ -34,7 +37,9 @@ public class UserRepository {
         webService = ApiUtils.getSOService();
     }
 
-    public void insert (Users users) {}
+    public void insert (Users users) { new InsertUserAsyncTask(usersDao).execute(users);}
+
+    public LiveData<List<Users>> getAllusers(){return allusers;}
 
 
     private static class InsertUserAsyncTask extends AsyncTask<Users, Void, Void>{
@@ -64,6 +69,8 @@ public class UserRepository {
 
             @Override
             public void onFailure(Call<List<Users>> call, Throwable t) {
+
+               Loggers.show(TAG,"OnFailure", "-->");
 
             }
         });
