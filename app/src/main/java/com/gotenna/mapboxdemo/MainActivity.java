@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private MapboxMap mapboxMap;
     private MapView mapView;
     private LocationComponent locationComponent;
+    private static final String TAG = "MainActivity";
 
     UserViewModel userViewModel;
 
@@ -58,7 +60,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         userViewModel.getAllUsersData().observe(this, new Observer<List<Users>>() {
             @Override
             public void onChanged(List<Users> users) {
-                showToast("Users");
+
+                Loggers.show(TAG,"Onchanged",users.get(0).getName());
+                //showToast("Users"+);
 
             }
         });

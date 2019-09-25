@@ -27,6 +27,8 @@ public class UserRepository {
     private UsersDao usersDao;
     LiveData<List<Users>> allusers;
 
+    List<Users> test_users;
+
 
     WebService webService;
 
@@ -35,6 +37,7 @@ public class UserRepository {
         usersDao = userDatabase.usersDao();
         allusers = usersDao.getAllUsersByLat();
         webService = ApiUtils.getSOService();
+        fetchData();
     }
 
     public void insert (Users users) { new InsertUserAsyncTask(usersDao).execute(users);}
@@ -63,8 +66,15 @@ public class UserRepository {
             @Override
             public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
 
+
+
                 if(response.isSuccessful()){
-                    Loggers.show(TAG,"FetchData","OnResponse :"+response.toString());
+                    test_users = response.body();
+                    for (Users user : test_users
+                         ) {
+                        Loggers.show(TAG,"FetchData","OnResponse :"+user.getName());
+                    }
+
                 }
             }
 
