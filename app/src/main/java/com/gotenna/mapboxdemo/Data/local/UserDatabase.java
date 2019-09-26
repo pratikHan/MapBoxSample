@@ -12,7 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.gotenna.mapboxdemo.Debug.Loggers;
 
-@Database(entities = {Users.class}, version = 1)
+@Database(entities = {Users.class}, version = 1,exportSchema = false)
 public abstract class UserDatabase extends RoomDatabase {
 
     private static final String TAG = "USERDATABASE";

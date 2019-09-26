@@ -61,7 +61,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onChanged(List<Users> users) {
 
-                Loggers.show(TAG,"Onchanged",users.get(0).getName());
+                for (Users userx : users
+                     ) {
+                    Loggers.show(TAG,"Onchanged",""+userx.getId());
+                }
+
+
+
                 //showToast("Users"+);
 
             }
