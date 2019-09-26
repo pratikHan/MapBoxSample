@@ -28,21 +28,25 @@ public class UserRepository {
 
 
 
+
+
     WebService webService;
 
     public UserRepository (Application application){
         UserDatabase userDatabase = UserDatabase.getInstance(application);
         usersDao = userDatabase.usersDao();
-        allusers = usersDao.getAllUSersByLongitude();
+        allusers = usersDao.getAllUsersByLat();
         webService = ApiUtils.getSOService();
         fetchData();
     }
 
-   // private void insert(List<Users> users) { new InsertUserAsyncTask(usersDao).execute(users);}
 
     private void insert(Users users){ new InsertUserAsyncTask(usersDao).execute(users);}
 
     public LiveData<List<Users>> getAllusers(){return allusers;}
+
+
+
 
 
 
@@ -60,6 +64,8 @@ public class UserRepository {
             return null;
         }
     }
+
+
 
 
 

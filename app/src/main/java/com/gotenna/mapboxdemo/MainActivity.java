@@ -44,8 +44,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     UserViewModel userViewModel;
 
-    private static final LatLng locationOne = new LatLng(36.532128, -93.489121);
-    private static final LatLng locationTwo = new LatLng(25.837058, -106.646234);
+    private   LatLng pinWithMaxLat = new LatLng(36.532128, -93.489121);
+    private   LatLng pinWitnMaxLon = new LatLng(25.837058, -106.646234);
+
+    List<Users> usersListMain;
 
 
 
@@ -61,14 +63,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onChanged(List<Users> users) {
 
-                for (Users userx : users
-                     ) {
-                    Loggers.show(TAG,"Onchanged",""+userx.getId());
-                }
-
-
-
-                //showToast("Users"+);
+               usersListMain = users;
+               setBounds();
 
             }
         });
@@ -102,7 +98,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 Toast.makeText(this,"Current User",Toast.LENGTH_SHORT).show();
                 showAllUSers();
-                setCameraBounds(locationOne,locationTwo);
+                setCameraBounds(pinWithMaxLat,pinWitnMaxLon);
+
 
 
                 return true;
@@ -138,14 +135,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
+    private void setBounds(){
+
+        pinWithMaxLat = new LatLng(usersListMain.get(0).getLatitude(),usersListMain.get(0).getLongitude());
+        pinWitnMaxLon = new LatLng(usersListMain.get(4).getLatitude(),usersListMain.get(4).getLongitude());
+
+
+    }
+
+
     private void showAllUSers(){
 
-        mapboxMap.addMarker(new MarkerOptions()
-                .position(locationOne)
-                .title("Loc 1"));
-        mapboxMap.addMarker(new MarkerOptions()
-                .position(locationTwo)
-                .title("Loc 2"));
+        for (Users user: usersListMain
+             ) {
+            mapboxMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(user.getLatitude(),user.getLongitude()))
+                    .title(user.getName()));
+        }
+
+
     }
 
     private void clearAllMarkers(){
