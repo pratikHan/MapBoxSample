@@ -1,6 +1,5 @@
 package com.gotenna.mapboxdemo.UI;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +7,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.gms.common.data.DataHolder;
 import com.gotenna.mapboxdemo.Data.local.Users;
 import com.gotenna.mapboxdemo.R;
 
@@ -45,6 +42,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataHolder> {
     @Override
     public int getItemCount() {
         return users.size();
+    }
+
+    public void setUserData(List<Users> userData){
+        this.users = userData;
+        notifyDataSetChanged();
     }
 
     class DataHolder extends RecyclerView.ViewHolder{

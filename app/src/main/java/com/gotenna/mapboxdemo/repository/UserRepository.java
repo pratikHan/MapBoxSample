@@ -3,8 +3,6 @@ package com.gotenna.mapboxdemo.repository;
 import android.app.Application;
 import android.os.AsyncTask;
 
-
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.gotenna.mapboxdemo.Data.local.UserDatabase;
@@ -13,6 +11,7 @@ import com.gotenna.mapboxdemo.Data.local.UsersDao;
 import com.gotenna.mapboxdemo.Data.remote.ApiUtils;
 import com.gotenna.mapboxdemo.Data.remote.WebService;
 import com.gotenna.mapboxdemo.Debug.Loggers;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -27,29 +26,37 @@ public class UserRepository {
     private LiveData<List<Users>> allUsers;
     private WebService webService;
 
-    public UserRepository (Application application){
+    public UserRepository(Application application) {
         UserDatabase userDatabase = UserDatabase.getInstance(application);
-        usersDao = userDatabase.usersDao();
-        allUsers = usersDao.getAllUsersByLat();
         webService = ApiUtils.getSOService();
         fetchData();
+        usersDao = userDatabase.usersDao();
+        allUsers = usersDao.getAllUsersByLat();
+
+
     }
 
 
-    private void insert(Users users){ new InsertUserAsyncTask(usersDao).execute(users);}
+    private void insert(Users users) {
+        new InsertUserAsyncTask(usersDao).execute(users);
+    }
 
-    public LiveData<List<Users>> getAllUsers(){return allUsers;}
+
+    public LiveData<List<Users>> getAllUsers() {
+        return allUsers;
+    }
 
 
-    private static class InsertUserAsyncTask extends AsyncTask<Users,Void,Void >{
+    private static class InsertUserAsyncTask extends AsyncTask<Users, Void, Void> {
 
         UsersDao usersDao;
 
-        private InsertUserAsyncTask(UsersDao usersDao){this.usersDao = usersDao;}
+        private InsertUserAsyncTask(UsersDao usersDao) {
+            this.usersDao = usersDao;
+        }
 
         @Override
         protected Void doInBackground(Users... users) {
-            Loggers.show(TAG,"InsertUserAsyncTask","-->");
             usersDao.insert(users[0]);
 
             return null;
@@ -57,29 +64,26 @@ public class UserRepository {
     }
 
 
+    private void fetchData() {
 
-
-
-
-    private void fetchData(){
 
         webService.getAllUsersByLatitude().enqueue(new Callback<List<Users>>() {
             @Override
-            public void onResponse( Call<List<Users>>  call, Response<List<Users>> response) {
-                if(response.isSuccessful()){
-
-                    for (Users user: response.body()
-                         ) {
-                        insert(user);
+            public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
+                if (response.isSuccessful()) {
+                    for (Users users : response.body()
+                    ) {
+                        insert(users);
                     }
-
                 }
+
             }
 
             @Override
             public void onFailure(Call<List<Users>> call, Throwable t) {
 
-               Loggers.show(TAG,"OnFailure", "-->");
+                Loggers.show(TAG, "OnFailure", "Failure while Fetching Data");
+
 
             }
         });

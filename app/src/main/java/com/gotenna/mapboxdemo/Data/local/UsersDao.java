@@ -14,7 +14,10 @@ import java.util.List;
 public interface UsersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert (Users user);
+    void insert (Users users);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAllUsers (Users[] userList);
 
     @Query("DELETE from users_table")
     void deleteAllNodes();
@@ -24,4 +27,5 @@ public interface UsersDao {
 
     @Query("Select * from users_table ORDER BY longitude DESC")
     LiveData<List<Users>> getAllUSersByLongitude();
+    
 }

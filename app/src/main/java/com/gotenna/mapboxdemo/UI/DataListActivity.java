@@ -42,6 +42,6 @@ public class DataListActivity extends AppCompatActivity {
                 adapter.setUserData(users);
             }
         });
-        
+
     }
 }
