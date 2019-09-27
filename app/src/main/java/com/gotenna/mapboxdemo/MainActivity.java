@@ -1,11 +1,11 @@
 package com.gotenna.mapboxdemo;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.gotenna.mapboxdemo.Data.local.Users;
 import com.gotenna.mapboxdemo.Debug.Loggers;
+import com.gotenna.mapboxdemo.UI.DataListActivity;
 import com.gotenna.mapboxdemo.ViewModel.UserViewModel;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
@@ -56,13 +57,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Loggers.show(this.getLocalClassName(),"Oncreate","_>");
+        Loggers.show(this.getLocalClassName(),"OnCreate","_>");
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userViewModel.getAllUsersData().observe(this, new Observer<List<Users>>() {
             @Override
             public void onChanged(List<Users> users) {
 
+                Loggers.show(TAG,"OnChanged","-->"+users.get(0).getName());
                usersListMain = users;
                setBounds();
 
@@ -96,18 +98,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             case R.id.menu_all:
 
-                Toast.makeText(this,"Current User",Toast.LENGTH_SHORT).show();
-                showAllUSers();
-                setCameraBounds(pinWithMaxLat,pinWitnMaxLon);
-
-
+                Intent intent = new Intent(MainActivity.this, DataListActivity.class);
+                startActivityForResult(intent,1);
 
                 return true;
+
+            case R.id.menu_all_pins:
+                showAllUsers();
+                setCameraBounds(pinWithMaxLat,pinWitnMaxLon);
+                return true;
+
 
             case R.id.menu_current:
                 clearAllMarkers();
                 locationComponent.setCameraMode(CameraMode.TRACKING);
-                Toast.makeText(this,"All Users",Toast.LENGTH_SHORT).show();
                 return true;
 
             default:
@@ -115,6 +119,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Loggers.show(TAG,"OnActivityResult","-->");
+    }
+
+
+
 
     @Override
     public void onMapReady(@NonNull MapboxMap mapboxMap) {
@@ -144,7 +158,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    private void showAllUSers(){
+    private void showAllUsers(){
+
+        Loggers.show(TAG,"showAllUsers","-->");
 
         for (Users user: usersListMain
              ) {
@@ -174,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mapboxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50), 5000);
     }
+
 
 
 

@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
-import androidx.room.Entity;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
@@ -15,7 +14,7 @@ import com.gotenna.mapboxdemo.Debug.Loggers;
 @Database(entities = {Users.class}, version = 1,exportSchema = false)
 public abstract class UserDatabase extends RoomDatabase {
 
-    private static final String TAG = "USERDATABASE";
+    private static final String TAG = "USER_DATABASE";
     private static UserDatabase instance;
     public abstract UsersDao usersDao();
 
@@ -41,7 +40,7 @@ public abstract class UserDatabase extends RoomDatabase {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
-            Loggers.show(TAG, "Callback","Oncreate");
+            Loggers.show(TAG, "Callback","OnCreate");
 
             new PopulateDb(instance).execute();
         }

@@ -8,6 +8,12 @@
         app:showAsAction="ifRoom"
        />
 
+    <item android:id="@+id/menu_all_pins"
+        android:icon="@drawable/ic_all_out"
+        android:title="Pins"
+        app:showAsAction="ifRoom"
+        />
+
     <item android:id="@+id/menu_all"
         android:icon="@drawable/ic_view_list"
         android:title="All"

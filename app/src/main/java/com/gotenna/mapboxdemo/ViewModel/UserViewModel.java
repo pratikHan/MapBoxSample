@@ -13,15 +13,15 @@ import java.util.List;
 
 public class UserViewModel extends AndroidViewModel {
 
-    UserRepository userRepository;
-    LiveData<List<Users>> allUsers;
+    private UserRepository userRepository;
+    private LiveData<List<Users>> allUsers;
 
     public UserViewModel (Application application){
         super(application);
 
         Loggers.show("USER view Model","Constructor","-->");
         userRepository = new UserRepository(application);
-        allUsers = userRepository.getAllusers();
+        allUsers = userRepository.getAllUsers();
 
     }
 
